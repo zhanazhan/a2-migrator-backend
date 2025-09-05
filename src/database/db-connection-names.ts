@@ -1,0 +1,4 @@
+export const CONNECTIONS = {
+  POSTGRES: 'POSTGRES',
+  SCRAPER: 'SCRAPER',
+};
