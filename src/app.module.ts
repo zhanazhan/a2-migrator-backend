@@ -11,7 +11,7 @@ import { MonitoringModule } from '@/modules/monitoring/monitoring.module';
 import { RentsModule } from '@/modules/rents/rents.module';
 
 import { FlatsModule } from './modules/flats/flats.module';
-import {MigratorModule} from "@/modules/migrator/migrator.module";
+import { MigratorModule } from '@/modules/migrator/migrator.module';
 
 @Module({
   imports: [
