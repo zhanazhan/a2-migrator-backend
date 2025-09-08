@@ -21,7 +21,8 @@
     "create:folders:win": "powershell -ExecutionPolicy Bypass -File ./scripts/setup-nest-structure.ps1",
     "create:folders:unix": "chmod +x ./scripts/setup-nest-structure.sh && ./scripts/setup-nest-structure.sh",
     "archive": "node scripts/packager.js",
-    "build:deployment": "npm run build && npm run archive"
+    "build:deployment": "npm run build && npm run archive",
+    "migration": "typeorm migration:run"
   },
   "engines": {
     "npm": ">=10.0.0",

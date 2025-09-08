@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Flat, FlatEntity } from '@/database/entities'; // Mongo model
+import { Flat, FlatEntity } from '@/database/entities';
+import { CONNECTIONS } from '@/database/db-connection-names'; // Mongo model
 
 @Injectable()
 export class PostgresFlatsService {
   constructor(
-    @InjectRepository(FlatEntity)
+    @InjectRepository(FlatEntity, CONNECTIONS.POSTGRES)
     private readonly flatsRepo: Repository<FlatEntity>,
   ) {}
 
@@ -66,7 +67,8 @@ export class PostgresFlatsService {
       return entity;
     });
 
-    await this.flatsRepo.save(entities, { chunk: 500 }); // batch insert
+    // ✅ Perform UPSERT by adNumber
+    await this.flatsRepo.upsert(entities, ['adNumber']);
   }
 
   private detectCity(doc: Flat) {

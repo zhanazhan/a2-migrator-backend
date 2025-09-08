@@ -1,3 +1,7 @@
+```
+
+```
+
 
 ```sql
 CREATE TABLE flats (
@@ -7,7 +11,6 @@ CREATE TABLE flats (
                        placement_date TIMESTAMP,
                        published_by VARCHAR(255),
                        map JSONB,  -- Embedded flat location data (GeoJSON)
-                       category JSONB,  -- Flexible data structure for category
                        room_count INT,
                        days_in_live INT,
                        added_at TIMESTAMP,

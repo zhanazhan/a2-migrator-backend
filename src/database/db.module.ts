@@ -13,8 +13,6 @@ import { RentDbService } from '@/database/services/rent-db.service';
 import { PostgresFlatsService } from '@/database/services/flats-posgresql.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FlatEntity } from '@/database/entities';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-
 @Module({
   imports: [
     MongooseModule.forFeature(
@@ -29,21 +27,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       [{ name: Complex.name, schema: ComplexSchema }],
       CONNECTIONS.SCRAPER,
     ),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('POSTGRES_HOST'),
-        port: configService.get<number>('POSTGRES_PORT'),
-        username: configService.get<string>('POSTGRES_USER'),
-        password: configService.get<string>('POSTGRES_PASSWORD'),
-        database: configService.get<string>('POSTGRES_DB'),
-        entities: [FlatEntity],
-        synchronize: false,
-      }),
-    }),
-    TypeOrmModule.forFeature([FlatEntity]),
+    TypeOrmModule.forFeature([FlatEntity], CONNECTIONS.POSTGRES),
   ],
   providers: [
     FlatsDBService,

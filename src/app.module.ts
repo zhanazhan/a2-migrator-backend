@@ -12,8 +12,12 @@ import { RentsModule } from '@/modules/rents/rents.module';
 
 import { FlatsModule } from './modules/flats/flats.module';
 import { MigratorModule } from '@/modules/migrator/migrator.module';
+import { HealthController } from '@/app.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { FlatEntity } from '@/database/entities';
 
 @Module({
+  controllers: [HealthController],
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env'],
@@ -37,6 +41,22 @@ import { MigratorModule } from '@/modules/migrator/migrator.module';
       },
       inject: [ConfigService],
       connectionName: CONNECTIONS.SCRAPER,
+    }),
+    TypeOrmModule.forRootAsync({
+      name: CONNECTIONS.POSTGRES,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('POSTGRES_HOST'),
+        port: configService.get<number>('POSTGRES_PORT'),
+        username: configService.get<string>('POSTGRES_USER'),
+        password: configService.get<string>('POSTGRES_PASSWORD'),
+        database: configService.get<string>('POSTGRES_DB'),
+        entities: [FlatEntity],
+        schema: configService.get<string>('POSTGRES_SCHEMA'),
+        synchronize: true,
+      }),
     }),
     DBModule,
     FlatsModule,
