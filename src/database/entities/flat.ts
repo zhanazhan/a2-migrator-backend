@@ -65,10 +65,25 @@ export class Flat extends Document implements SubjectData {
   district: string;
 
   @Prop({ type: String })
+  regionAlias: string;
+
+  @Prop({ type: String })
   houseType: string;
 
   @Prop({ type: String })
   residentialComplex: string;
+
+  @Prop({ type: String })
+  residentialComplexClass: string;
+
+  @Prop({ type: String })
+  residentialComplexCompany: string;
+
+  @Prop({ type: Number })
+  residentialComplexYear: number;
+
+  @Prop({ type: Number })
+  residentialComplexFloors: number;
 
   @Prop({ type: Number })
   residentialComplexId: number;

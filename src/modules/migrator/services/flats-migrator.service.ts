@@ -1,22 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ComplexesService } from '@/modules/complex/services/complexes.service';
-import { FlatsService } from '@/modules/flats/services/flats.service';
+
+import { BaseReporterService } from '@/core/services/base-reporter.service';
 import { Flat } from '@/database/entities';
 import { PostgresFlatsService } from '@/database/services/flats-posgresql.service';
+import { ComplexesService } from '@/modules/complex/services/complexes.service';
+import { FlatsService } from '@/modules/flats/services/flats.service';
 import { TelegramService } from '@/modules/monitoring/services/telegram.service';
 
 @Injectable()
-export class MigratorService {
-  private readonly logger = new Logger(MigratorService.name);
-
+export class FlatsMigratorService extends BaseReporterService {
   constructor(
     private complexesService: ComplexesService,
     private dbService: FlatsService,
     private postgresFlatsService: PostgresFlatsService,
-    private telegramService: TelegramService,
-  ) {}
+    protected telegramService: TelegramService,
+  ) {
+    super('pg-flats', new Logger(FlatsMigratorService.name), telegramService);
+  }
 
-  async migrateFlats(batchSize: number = 10000) {
+  async migrate(batchSize: number = 10000) {
     await this.postgresFlatsService.deleteAll();
     // Get total documents count first
     const totalDocs = await this.dbService.db.countDocuments();
@@ -60,10 +62,5 @@ export class MigratorService {
       this.logger.error(`Insert batch failed: ${err.message}`, err.stack);
       throw err;
     }
-  }
-
-  private log(message: string) {
-    this.logger.log(message);
-    this.telegramService.sendMessage(message, 'flat').then();
   }
 }

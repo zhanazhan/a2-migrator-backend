@@ -1,0 +1,9 @@
+### get complex cache
+GET {{BASE_URL}}/api/v1/complexes/cache
+Content-Type: application/json
+Cache-Control: no-cache
+
+### find complex
+GET {{BASE_URL}}/api/v1/complexes?name=Берекет&city=almaty
+Content-Type: application/json
+Cache-Control: no-cache

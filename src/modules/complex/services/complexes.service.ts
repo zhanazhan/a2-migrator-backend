@@ -1,79 +1,26 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 
-import { Complex } from '@/database/entities/complex';
+import { Complex } from '@/database/entities';
 import { ComplexDbService } from '@/database/services/complex-db.service';
 import { cleanText } from '@/libs/strings';
-import { ComplexMatchingDto } from '@/modules/complex/dtos/complex-matching.dto';
 import { ComplexDto } from '@/modules/complex/dtos/complexes-data.dto';
-
-const REMOVE_PARTS = ['жк'];
-
-const DEFAULT_RESPONSE = (name: string): ComplexMatchingDto =>
-  ({ name, sources: [] }) as ComplexMatchingDto;
 
 @Injectable()
 export class ComplexesService {
   private readonly logger = new Logger(ComplexesService.name);
+  private cache: Record<string, ComplexDto> = {};
 
   constructor(private service: ComplexDbService) {}
 
-  private getFixedName(complexName: string) {
-    const lowerCase = complexName.toLowerCase();
-
-    return lowerCase
-      .split(' ')
-      .filter((c) => !REMOVE_PARTS.includes(c))
-      .join(' ')
-      .trim();
-  }
-
-  async findComplexes(
-    complexes: string[],
-    complexClass: string,
-  ): Promise<ComplexDto[]> {
-    return await this.service.db
-      .find({
-        name: { $in: complexes },
-        'parameters.value': complexClass,
-      })
-      .exec();
-  }
-
-  async find(
-    complexName: string,
-    cityEnglish: string,
-  ): Promise<ComplexMatchingDto> {
-    if (!complexName || complexName.length === 0) {
-      this.logger.error('No complex provided');
-      return DEFAULT_RESPONSE('');
-    }
-
-    let candidates = await this.service.db
-      .find({
-        name: complexName,
-        regionAlias: cityEnglish,
-      })
-      .exec();
-
-    if (candidates.length === 1) {
-      return this.enrichComplex(complexName, candidates[0], true);
-    }
-
-    return null;
-  }
-
-  private enrichComplex(
-    name: string,
-    complex: Complex | null,
-    exactMatch: boolean,
-  ): ComplexMatchingDto {
+  private enrichComplex(complex: Complex | null): ComplexDto {
     const source = plainToInstance(ComplexDto, complex, {
       excludeExtraneousValues: true,
     });
 
-    const improved = {
+    return {
       ...source,
+      name: cleanText(source.name),
       address: cleanText(source.address),
       class: cleanText(
         this.getValueFromTheArray(
@@ -118,12 +65,6 @@ export class ComplexesService {
         },
       ),
     };
-
-    return {
-      name: cleanText(name),
-      exactMatch,
-      sources: [improved],
-    };
   }
 
   private getValueFromTheArray<T>(
@@ -142,5 +83,71 @@ export class ComplexesService {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-argument
     return found && found[returnValue] ? formatter(found[returnValue]) : null;
+  }
+
+  private getKey(name: string, regionAlias: string) {
+    return `${name}-${regionAlias ?? ''}`;
+  }
+
+  private async prepareCache(): Promise<void> {
+    if (Object.keys(this.cache).length > 0) {
+      this.logger.warn('cache ready');
+      return;
+    }
+    try {
+      const cursor = this.service.db.find().cursor();
+
+      for await (const item of cursor) {
+        if (!item) {
+          continue;
+        }
+        const { name, regionAlias } = item;
+        if (!name) {
+          continue;
+        }
+        const key = this.getKey(name, regionAlias);
+        // this.logger.debug(`cache building: ${key}`);
+        this.cache[key] = this.enrichComplex(item);
+      }
+      this.logger.warn('cache built');
+    } catch (e) {
+      this.logger.error(`cache failed: ${e}`);
+    }
+  }
+
+  async find(name: string, regionAlias: string): Promise<ComplexDto | null> {
+    if (!name || name.trim().length === 0) {
+      return null;
+    }
+
+    await this.prepareCache();
+
+    try {
+      return regionAlias
+        ? this.cache[this.getKey(name, regionAlias)]
+        : await this.findOne(name);
+    } catch (e) {
+      this.logger.error(e);
+      return null;
+    }
+  }
+
+  async getCache() {
+    await this.prepareCache();
+    return this.cache;
+  }
+
+  private async findOne(name: string): Promise<ComplexDto> {
+    const items = await this.service.db
+      .find({
+        name,
+      })
+      .exec();
+
+    if (items.length === 1) {
+      return this.enrichComplex(items[0]);
+    } else {
+      return null;
+    }
   }
 }

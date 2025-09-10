@@ -1,0 +1,9 @@
+### enrich flats
+GET {{BASE_URL}}/api/v1/migrate/enrich/flats
+Content-Type: application/json
+Cache-Control: no-cache
+
+### enrich rents
+GET {{BASE_URL}}/api/v1/migrate/enrich/rents
+Content-Type: application/json
+Cache-Control: no-cache

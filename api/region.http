@@ -1,0 +1,9 @@
+### get complex cache
+GET {{BASE_URL}}/api/v1/regions/cache
+Content-Type: application/json
+Cache-Control: no-cache
+
+### find complex
+GET {{BASE_URL}}/api/v1/regions?name=astana-almatinskij
+Content-Type: application/json
+Cache-Control: no-cache

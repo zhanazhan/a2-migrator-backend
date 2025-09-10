@@ -15,6 +15,7 @@ import { MigratorModule } from '@/modules/migrator/migrator.module';
 import { HealthController } from '@/app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FlatEntity } from '@/database/entities';
+import { RegionsModule } from '@/modules/regions/regions.module';
 
 @Module({
   controllers: [HealthController],
@@ -64,6 +65,7 @@ import { FlatEntity } from '@/database/entities';
     ComplexesModule,
     MonitoringModule,
     MigratorModule,
+    RegionsModule,
   ],
 })
 export class AppModule {}

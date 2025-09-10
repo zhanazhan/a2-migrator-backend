@@ -1,4 +1,3 @@
 export const removeZeroWidthChars = (input: string): string => {
-  if (!input) return null;
   return input.replace(/[\u200B-\u200D\uFEFF]/g, '');
 };

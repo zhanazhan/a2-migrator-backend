@@ -13,6 +13,8 @@ import { RentDbService } from '@/database/services/rent-db.service';
 import { PostgresFlatsService } from '@/database/services/flats-posgresql.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FlatEntity } from '@/database/entities';
+import { RegionDbService } from '@/database/services/region-db.service';
+import { Region, RegionSchema } from '@/database/entities/region';
 @Module({
   imports: [
     MongooseModule.forFeature(
@@ -27,6 +29,10 @@ import { FlatEntity } from '@/database/entities';
       [{ name: Complex.name, schema: ComplexSchema }],
       CONNECTIONS.SCRAPER,
     ),
+    MongooseModule.forFeature(
+      [{ name: Region.name, schema: RegionSchema }],
+      CONNECTIONS.SCRAPER,
+    ),
     TypeOrmModule.forFeature([FlatEntity], CONNECTIONS.POSTGRES),
   ],
   providers: [
@@ -34,12 +40,14 @@ import { FlatEntity } from '@/database/entities';
     RentDbService,
     ComplexDbService,
     PostgresFlatsService,
+    RegionDbService,
   ],
   exports: [
     FlatsDBService,
     RentDbService,
     ComplexDbService,
     PostgresFlatsService,
+    RegionDbService,
   ],
 })
 export class DBModule {}

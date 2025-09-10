@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
+
 import { FlatLocation } from '@/database/entities';
 
 export class ComplexDto {

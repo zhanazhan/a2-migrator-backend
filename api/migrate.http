@@ -1,4 +1,10 @@
-GET {{BASE_URL}}/api/v1/flats/migrate
+### migrate flats to pg
+GET {{BASE_URL}}/api/v1/migrate/flats
+Content-Type: application/json
+Cache-Control: no-cache
+
+### migrate rents to pg
+GET {{BASE_URL}}/api/v1/migrate/rents
 Content-Type: application/json
 Cache-Control: no-cache
 

@@ -1,4 +1,3 @@
 export const removeInvisibleChars = (input: string): string => {
-  if (!input) return null;
   return input.replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200D\uFEFF]/g, '');
 };

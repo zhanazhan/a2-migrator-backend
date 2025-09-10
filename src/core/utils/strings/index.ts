@@ -3,8 +3,14 @@ import { removeZeroWidthChars } from '@/libs/strings/remove-zero-width-chars';
 
 type Cleaner = (input: string) => string;
 
-const cleaners: Cleaner[] = [removeZeroWidthChars, removeInvisibleChars];
-
-export const cleanText = (text: string): string => {
+export const cleanText = (
+  text: string,
+  extraCleaners: Cleaner[] = [],
+): string => {
+  const cleaners: Cleaner[] = [
+    removeZeroWidthChars,
+    removeInvisibleChars,
+    ...extraCleaners,
+  ];
   return cleaners.reduce((acc, fn) => fn(acc), text);
 };
