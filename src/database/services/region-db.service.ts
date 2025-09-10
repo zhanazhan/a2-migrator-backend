@@ -11,7 +11,7 @@ import { MongooseService } from '../db.service';
 export class RegionDbService extends MongooseService<Region> {
   constructor(
     @InjectModel(Region.name, CONNECTIONS.SCRAPER)
-    protected model: Model<Region>,
+    public model: Model<Region>,
   ) {
     super(model);
   }

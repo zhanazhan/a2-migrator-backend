@@ -21,12 +21,12 @@ export class FlatsMigratorService extends BaseReporterService {
   async migrate(batchSize: number = 10000) {
     await this.postgresFlatsService.deleteAll();
     // Get total documents count first
-    const totalDocs = await this.dbService.db.countDocuments();
+    const totalDocs = await this.dbService.model.countDocuments();
 
     this.log(`Migration init. Total: ${totalDocs} documents`);
     let processed = 0;
 
-    const cursor = this.dbService.db.find().cursor();
+    const cursor = this.dbService.model.find().cursor();
     let batch: Flat[] = [];
 
     for await (const doc of cursor) {

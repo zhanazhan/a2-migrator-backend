@@ -80,12 +80,6 @@ export class Flat extends Document implements SubjectData {
   residentialComplexCompany: string;
 
   @Prop({ type: Number })
-  residentialComplexYear: number;
-
-  @Prop({ type: Number })
-  residentialComplexFloors: number;
-
-  @Prop({ type: Number })
   residentialComplexId: number;
 
   @Prop({ type: Number })

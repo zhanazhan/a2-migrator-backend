@@ -2,11 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Document, Model, FilterQuery } from 'mongoose';
 
 export class MongooseService<T extends Document> {
-  constructor(protected model: Model<T>) {}
-
-  get db() {
-    return this.model;
-  }
+  constructor(public model: Model<T>) {}
 
   async create(item: Partial<T>): Promise<T> {
     delete item.id;

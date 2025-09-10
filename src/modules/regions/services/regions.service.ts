@@ -9,17 +9,13 @@ export class RegionsService {
 
   constructor(private service: RegionDbService) {}
 
-  get db() {
-    return this.service.db;
-  }
-
   async prepareCache(): Promise<void> {
     if (Object.keys(this.cache).length > 0) {
       this.logger.warn('cache ready');
       return;
     }
     try {
-      const cursor = this.service.db.find().cursor();
+      const cursor = this.service.model.find().cursor();
 
       for await (const item of cursor) {
         for (const child of item.result) {

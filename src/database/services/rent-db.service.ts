@@ -9,7 +9,7 @@ import { Rent } from '@/database/entities/rent';
 @Injectable()
 export class RentDbService extends MongooseService<Rent> {
   constructor(
-    @InjectModel(Rent.name, CONNECTIONS.SCRAPER) protected model: Model<Rent>,
+    @InjectModel(Rent.name, CONNECTIONS.SCRAPER) public model: Model<Rent>,
   ) {
     super(model);
   }

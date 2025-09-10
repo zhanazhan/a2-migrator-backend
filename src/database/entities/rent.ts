@@ -53,6 +53,9 @@ export class Rent extends Document implements SubjectData {
   @Prop({ type: MongooseSchema.Types.Mixed })
   address: any;
 
+  @Prop({ type: String })
+  fullAddress: string;
+
   @Prop({ type: MongooseSchema.Types.Mixed })
   details: any;
 
@@ -92,6 +95,9 @@ export class Rent extends Document implements SubjectData {
   @Prop({ type: String })
   district: string;
 
+  @Prop({ type: String })
+  regionAlias: string;
+
   @Prop({ type: Date })
   placementDate: Date;
 
@@ -103,6 +109,12 @@ export class Rent extends Document implements SubjectData {
 
   @Prop({ type: String })
   residentialComplex: string;
+
+  @Prop({ type: String })
+  residentialComplexClass: string;
+
+  @Prop({ type: String })
+  residentialComplexCompany: string;
 
   @Prop({ type: Number })
   residentialComplexId: number;

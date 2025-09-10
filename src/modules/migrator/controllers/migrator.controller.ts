@@ -31,4 +31,15 @@ export class MigratorController {
 
     return { message: 'Enrich flats started' };
   }
+
+  @Get('enrich/rents')
+  enrichRents(@Query('batchSize') batchSize?: string) {
+    const size = batchSize ? parseInt(batchSize, 10) : 10000;
+    this.flatsEnricherService
+      .migrate(size)
+      .then(() => console.log('Enrich flats finished'))
+      .catch((err) => console.error('Enrich flats failed', err));
+
+    return { message: 'Enrich flats started' };
+  }
 }

@@ -11,7 +11,7 @@ import { MongooseService } from '../db.service';
 export class ComplexDbService extends MongooseService<Complex> {
   constructor(
     @InjectModel(Complex.name, CONNECTIONS.SCRAPER)
-    protected model: Model<Complex>,
+    public model: Model<Complex>,
   ) {
     super(model);
   }

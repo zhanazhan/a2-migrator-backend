@@ -6,7 +6,7 @@ import { FlatsDBService } from '@/database/services/flats-db.service';
 export class FlatsService {
   constructor(private service: FlatsDBService) {}
 
-  get db() {
-    return this.service.db;
+  get model() {
+    return this.service.model;
   }
 }

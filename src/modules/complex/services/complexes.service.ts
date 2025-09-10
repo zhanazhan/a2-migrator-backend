@@ -95,7 +95,7 @@ export class ComplexesService {
       return;
     }
     try {
-      const cursor = this.service.db.find().cursor();
+      const cursor = this.service.model.find().cursor();
 
       for await (const item of cursor) {
         if (!item) {
@@ -138,7 +138,7 @@ export class ComplexesService {
   }
 
   private async findOne(name: string): Promise<ComplexDto> {
-    const items = await this.service.db
+    const items = await this.service.model
       .find({
         name,
       })

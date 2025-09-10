@@ -9,7 +9,7 @@ import { Flat } from '@/database/entities/flat';
 @Injectable()
 export class FlatsDBService extends MongooseService<Flat> {
   constructor(
-    @InjectModel(Flat.name, CONNECTIONS.SCRAPER) protected model: Model<Flat>,
+    @InjectModel(Flat.name, CONNECTIONS.SCRAPER) public model: Model<Flat>,
   ) {
     super(model);
   }
