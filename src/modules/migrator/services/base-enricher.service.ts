@@ -26,7 +26,7 @@ export class BaseEnricherService<
     // Get total documents count first
     const totalDocs = await this.dbService.model.countDocuments();
 
-    this.log(`Enrich flats init. Total: ${totalDocs} documents`);
+    this.log(`Enrich ${this.context} init. Total: ${totalDocs} documents`);
     let processed = 0;
 
     const cursor = this.dbService.model.find().cursor();
@@ -41,7 +41,7 @@ export class BaseEnricherService<
 
         const percent = ((processed / totalDocs) * 100).toFixed(2);
         this.log(
-          `Enrich flats ${processed}/${totalDocs} documents (${percent}%)`,
+          `Enrich ${this.context} ${processed}/${totalDocs} documents (${percent}%)`,
         );
 
         batch = [];
@@ -54,11 +54,11 @@ export class BaseEnricherService<
 
       const percent = ((processed / totalDocs) * 100).toFixed(2);
       this.log(
-        `Enrich flats ${processed}/${totalDocs} documents (${percent}%)`,
+        `Enrich ${this.context} ${processed}/${totalDocs} documents (${percent}%)`,
       );
     }
 
-    this.log(`✅ Enrich flats complete. Total: ${processed} documents`);
+    this.log(`✅ Enrich ${this.context} complete. Total: ${processed} documents`);
   }
 
   private async updateFlats(batch: T[]) {
@@ -99,9 +99,7 @@ export class BaseEnricherService<
     for (const item of batch) {
       const regionAlias = await this.regionsService.find(item.city);
 
-      if (!regionAlias) {
-        this.logger.debug(`Region not found: ${item.city}`);
-      } else {
+      if (regionAlias) {
         item.regionAlias = regionAlias;
       }
 
@@ -111,9 +109,6 @@ export class BaseEnricherService<
       );
 
       if (!complex) {
-        this.logger.debug(
-          `Complex not found: ${item.residentialComplex}, region: ${regionAlias}`,
-        );
         continue; // or set defaults
       }
 

@@ -2,12 +2,14 @@ import { Controller, Get, Query } from '@nestjs/common';
 
 import { FlatsEnricherService } from '@/modules/migrator/services/flats-enricher.service';
 import { FlatsMigratorService } from '@/modules/migrator/services/flats-migrator.service';
+import { RentsEnricherService } from '@/modules/migrator/services/rents-enricher.service';
 
 @Controller({ path: 'migrate', version: '1' })
 export class MigratorController {
   constructor(
     private readonly flatsMigratorService: FlatsMigratorService,
     private readonly flatsEnricherService: FlatsEnricherService,
+    private readonly rentsEnricherService: RentsEnricherService,
   ) {}
 
   @Get('flats')
@@ -35,11 +37,11 @@ export class MigratorController {
   @Get('enrich/rents')
   enrichRents(@Query('batchSize') batchSize?: string) {
     const size = batchSize ? parseInt(batchSize, 10) : 10000;
-    this.flatsEnricherService
+    this.rentsEnricherService
       .migrate(size)
-      .then(() => console.log('Enrich flats finished'))
-      .catch((err) => console.error('Enrich flats failed', err));
+      .then(() => console.log('Enrich rents finished'))
+      .catch((err) => console.error('Enrich rents failed', err));
 
-    return { message: 'Enrich flats started' };
+    return { message: 'Enrich rents started' };
   }
 }
