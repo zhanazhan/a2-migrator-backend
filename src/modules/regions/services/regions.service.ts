@@ -11,7 +11,7 @@ export class RegionsService {
 
   async prepareCache(): Promise<void> {
     if (Object.keys(this.cache).length > 0) {
-      this.logger.warn('cache ready');
+      // this.logger.warn('cache ready');
       return;
     }
     try {
@@ -32,7 +32,7 @@ export class RegionsService {
 
   async find(name: string) {
     if (!name || name.trim().length === 0) {
-      this.logger.warn('name not supplied');
+      // this.logger.warn('name not supplied');
       return null;
     }
 

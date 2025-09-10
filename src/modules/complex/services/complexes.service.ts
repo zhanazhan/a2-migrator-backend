@@ -91,7 +91,7 @@ export class ComplexesService {
 
   private async prepareCache(): Promise<void> {
     if (Object.keys(this.cache).length > 0) {
-      this.logger.warn('cache ready');
+      // this.logger.warn('cache ready');
       return;
     }
     try {
