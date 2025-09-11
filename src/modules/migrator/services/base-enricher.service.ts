@@ -4,6 +4,7 @@ import { BaseReporterService } from '@/core/services/base-reporter.service';
 import { MongooseService } from '@/database/db.service';
 import { SubjectData } from '@/database/entities';
 import { ComplexesService } from '@/modules/complex/services/complexes.service';
+import { gradeApartment } from '@/modules/migrator/utils/apartment-class-grader';
 import { TelegramService } from '@/modules/monitoring/services/telegram.service';
 import { RegionsService } from '@/modules/regions/services/regions.service';
 
@@ -58,7 +59,9 @@ export class BaseEnricherService<
       );
     }
 
-    this.log(`✅ Enrich ${this.context} complete. Total: ${processed} documents`);
+    this.log(
+      `✅ Enrich ${this.context} complete. Total: ${processed} documents`,
+    );
   }
 
   private async updateFlats(batch: T[]) {
@@ -109,11 +112,12 @@ export class BaseEnricherService<
       );
 
       if (!complex) {
+        item.residentialComplexClass = gradeApartment(item);
         continue; // or set defaults
       }
 
       item.fullAddress = complex.address;
-      item.residentialComplexClass = complex.class;
+      item.residentialComplexClass = complex.class ?? gradeApartment(item);
       item.constructionYear = item.constructionYear ?? complex.year;
       item.totalFloors = item.totalFloors ?? complex.totalFloors;
       item.residentialComplexCompany = complex.company;

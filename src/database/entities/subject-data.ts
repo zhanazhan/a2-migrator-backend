@@ -8,6 +8,11 @@ export interface SubjectData extends Document {
   floor: number;
   totalFloors: number;
   area: number;
+  ceilings: string;
+  security: string;
+  condition: string;
+  description: string;
+  statistics: any;
   cost: number;
   constructionYear: number;
   city: string;
